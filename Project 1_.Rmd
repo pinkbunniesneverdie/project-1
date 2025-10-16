@@ -1,0 +1,81 @@
+---
+title: "Project 1"
+author: "Rachel Choi"
+output: html_document
+date: "2025-09-22"
+---
+```{r setup, include=FALSE}
+# setup html file
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+```{r}
+#importing the dataset
+setwd("/Users/jungs/Downloads/sds 313/")
+school = read.csv('Project1_school.csv')
+```
+# **<span style="font-family:Arial; font-style:italic; font-weight:bold;">Introduction</span>**
+
+This data set was collected from students in the United States and organized by the year and state. The data set is from the CORGIS Dataset Project. There are many variables involved, but it shows how much students participate in the SAT and also how the scores the distributed over different variables. The variable of interest would be the `r '<span style="background-color:yellow;">total number of test takers</span>'`. I chose these variables because I think it reflects the academic landscape of each state the best. I think that this best shows the dynamic of each state and student engagement overall. 
+I also have predictor variables. I used the variable `r '<span style="color:pink;">state</span>'` to compare the results and engagement of different states, `r '<span style="color:green;">year</span>'` to see how test participation increased or decreased, and `r '<span style="color:grey;">the number of students that scored between 700-800 on the verval section</span>'`to give a better picture of the students. 
+
+If you need for information about the SAT, visit the [College Board Overview](https://collegereadiness.collegeboard.org/sat).  
+```{r}
+knitr::include_graphics("SAT.jpg")
+```
+Picture from David Schaffer (stock.adobe)
+
+# **Outcome Variable**
+
+```{r}
+#importing ggplot to make a graph
+library(ggplot2) 
+#histogram of the number of test takers
+ggplot(school) +geom_histogram(aes(x = Total.Test.takers),bins = 50, fill = "pink", color = "black") +labs(title = "Total test takers",x = "# of test takers")
+```
+This is a histogram of my variable of interest. This shows the distribution of the # of test takers The mean amount of test takers is `r round(mean(school$Total.Test.takers),2)` and the median is `r round(median(school$Total.Test.takers),2)`. 
+
+# **Bivariate Analyses**
+
+```{r}
+#variable for the total takers by year
+ustotal=aggregate(Total.Test.takers~Year,data=school,sum)
+ggplot(ustotal, aes(x = Year, y = Total.Test.takers)) +geom_point(color = "purple") +labs(x = "Year",y = "Total US test takers",title = "Total US Test Takers by Year")
+```
+If we look at the graph, there is a positive slope in the scatter plot of the Total US test takers vs. Year. As time progresses, there is an increase in the amount of total US test takers. This shows that the participation for the SAT exam is increasing overtime. The outcome of this graph is that the Year and the total amount of test takers is closely related as they are <span style="font-size:18px;">directly proportional to each other</span>. The maximum amount of total US test takers was `r round(max(ustotal$Total.Test.takers), 2)`.The minimum amount of test takers would be `r round(min(ustotal$Total.Test.takers),2)`.
+```{r}
+testtakersinstate=aggregate(Total.Test.takers ~ State.Code,data = subset(school, Year == max(school$Year)),sum)
+ggplot(testtakersinstate, aes(x =  reorder(State.Code, Total.Test.takers),y =Total.Test.takers)) +geom_point(color = "purple", size = 3) +labs(x ="State",y = "Total test takers",title = "Total US Test Takers by State in 2015")
+
+```
+As the data set has data of about 20 years, I figured that the most relevant year was 2015. This distribution shows which states have the most participation and which states don't. Some states show very high numbers of test takers which can connect to stronger college entrance. On the other hand, several states display relatively low participation, which may be due to smaller populations, alternative testing preferences, or barriers to access. The maximum amount of participation would be `r round(max(testtakersinstate$Total.Test.takers), 2)` while the minimum amount would be `r round(min(testtakersinstate$Total.Test.takers), 2)` test takers in 2015.
+
+
+```{r}
+#scatter plot for the total test takers by the scores between 700 and 800
+ggplot(school)+geom_point(aes(x=Total.Test.takers,y=Score.Ranges.Between.700.to.800.Verbal.Total),color = "lightblue") + labs(x='Total test takers', title = 'Total test takers by score range', y = 'Score ranges from 700-800') 
+```
+This graph shows the correlation between the total test takers and the scores ranging from 700~800. In the SAT, 700~800 is considered a very high score and this shows how the an increase in the participation rate also relates to an increase in the achievement of the test. As the amount of people participating increased, the scores have also increased. The correlation between these 2 variables would be `r round(cor(school$Total.Test.takers, school$Score.Ranges.Between.700.to.800.Verbal.Total), 2)`. This suggests a very strong positive correlation. 
+
+```{r}
+#Multivariate plot for the total test takers and verbal scores
+ggplot(school, aes(x = Score.Ranges.Between.700.to.800.Verbal.Total, y = Total.Test.takers, color = State.Code)) + geom_point(alpha = 0.7) + labs(x = "High Verbal Scores (700–800)", y = "Total Test Takers", color = "State", title = "Total Test Takers vs. High Verbal Scores Across States") 
+
+```
+This is a multivariate plot that shows the relationship between the total test takers and the verbal scores. The data also shows the numbers between states which gives a better idea of each state as well. This graph shows that there is a positive relationship with the total test takers and verbal scores and also shows which state has the highest participation and verbal scores. 
+
+# **Conclusion**
+SAT is a very popular and well known exam that has a lot of variables. My variable of interest was the total amount of test takers. This allowed me to explore trends over time, differences across states, and the relationship between participation and achievement. From the data, we can see that the overall participation has increased rapidly over the years and this caused the overall achievement to increase as well. I think this can also connect to the idea of college readiness and how people are taking it more seriously. If I had to continue analyzing, I would choose another variable such as the median income to connect the SAT scores to the personal lives of the students. In the future, there should be a variable regarding the resources of each state and how that impacts the students. Another idea for the future could be to include college results of students in each percentile. This can show how "relevant" the SAT is to college readiness.
+If you would like to know more about the SAT score percentiles, you can visit the [National SAT Percentiles](https://research.collegeboard.org/reports/sat-suite/understanding-scores/sat). 
+
+# **Choice elements**
+In this report, I included choice elements to enhance the analysis. I used inline code to report statistics directly within the text of the graphs. Hyperlinks were included in both the introduction and conclusion to provide more context. To emphasize key variables, I applied font highlighting, color changing, and font changing in the introduction and discriptions. I also created new variables, including ustotal and testtakersinstate. A subset of the data for the year 2015 was used to examine the distribution of total test takers by state. Finally, a multivariate plot was included just before the conclusion to display the relationship among total test takers and two predictors.
+
+# **Reference**
+1. College Board. SAT Overview and Participation Trends. Retrieved from https://collegereadiness.collegeboard.org/sat
+
+2. College Board. Understanding SAT Scores and Percentiles. Retrieved from https://collegereadiness.collegeboard.org/sat/scores/understanding-sat-scores
+
+3. David Schaffer, Picture of students taking the SAT exam. Retreived from (stock.adobe)
+
