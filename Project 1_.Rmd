@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```{r}
 #importing the dataset
-setwd("/Users/jungs/Downloads/sds 313/")
+
 school = read.csv('Project1_school.csv')
 ```
 # **<span style="font-family:Arial; font-style:italic; font-weight:bold;">Introduction</span>**
@@ -78,4 +78,5 @@ In this report, I included choice elements to enhance the analysis. I used inlin
 2. College Board. Understanding SAT Scores and Percentiles. Retrieved from https://collegereadiness.collegeboard.org/sat/scores/understanding-sat-scores
 
 3. David Schaffer, Picture of students taking the SAT exam. Retreived from (stock.adobe)
+
 
